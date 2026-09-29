@@ -1,0 +1,16 @@
+{
+  "name": "Nevada Nexus",
+  "short_name": "NevadaNexus",
+  "description": "Multimodal AI Community Assistance Navigator for Nevada CD-4",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#1e4db9",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
