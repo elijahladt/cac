@@ -52,35 +52,57 @@ export function VoiceInputModal({
 
   if (!isOpen) return null;
 
+  const triggerFallbackDemoSpeech = () => {
+    const demo =
+      language === 'es'
+        ? 'Mi factura de electricidad está muy alta y no tengo suficiente dinero. También necesito comida para mis hijos.'
+        : language === 'tl'
+        ? 'Mataas ang singil sa kuryente at kailangan ko ng pagkain para sa mga bata.'
+        : 'My power might get shut off and I need help getting food for my kids in North Las Vegas.';
+    finishRecording(demo);
+  };
+
   const startRecording = () => {
     setIsRecording(true);
     setRecordingSeconds(0);
     setTranscript('');
 
-    // Check browser speech recognition API (Web Speech API)
-    const SpeechRecognition =
-      (window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown })
-        .SpeechRecognition ||
-      (window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown })
-        .webkitSpeechRecognition;
+    interface WindowWithSpeech extends Window {
+      SpeechRecognition?: new () => {
+        lang: string;
+        interimResults: boolean;
+        maxAlternatives: number;
+        onresult: (e: { results: { [index: number]: { [index: number]: { transcript: string } } } }) => void;
+        onerror: () => void;
+        start: () => void;
+      };
+      webkitSpeechRecognition?: new () => {
+        lang: string;
+        interimResults: boolean;
+        maxAlternatives: number;
+        onresult: (e: { results: { [index: number]: { [index: number]: { transcript: string } } } }) => void;
+        onerror: () => void;
+        start: () => void;
+      };
+    }
 
-    if (SpeechRecognition) {
+    const win = typeof window !== 'undefined' ? (window as WindowWithSpeech) : null;
+    const SpeechClass = win?.SpeechRecognition || win?.webkitSpeechRecognition;
+
+    if (SpeechClass) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const recognition = new (SpeechRecognition as any)();
+        const recognition = new SpeechClass();
         recognition.lang = language === 'es' ? 'es-US' : language === 'tl' ? 'fil-PH' : 'en-US';
         recognition.interimResults = false;
         recognition.maxAlternatives = 1;
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        recognition.onresult = (event: any) => {
+        recognition.onresult = (event) => {
           const res = event.results[0][0].transcript;
           finishRecording(res);
         };
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         recognition.onerror = () => {
-          useFallbackDemoSpeech();
+          triggerFallbackDemoSpeech();
         };
 
         recognition.start();
@@ -92,18 +114,8 @@ export function VoiceInputModal({
 
     // If Web Speech is unsupported or blocked, simulate 3-second recording then fallback
     setTimeout(() => {
-      useFallbackDemoSpeech();
+      triggerFallbackDemoSpeech();
     }, 2800);
-  };
-
-  const useFallbackDemoSpeech = () => {
-    const demo =
-      language === 'es'
-        ? 'Mi factura de electricidad está muy alta y no tengo suficiente dinero. También necesito comida para mis hijos.'
-        : language === 'tl'
-        ? 'Mataas ang singil sa kuryente at kailangan ko ng pagkain para sa mga bata.'
-        : 'My power might get shut off and I need help getting food for my kids in North Las Vegas.';
-    finishRecording(demo);
   };
 
   const finishRecording = (recognizedText: string) => {

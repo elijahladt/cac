@@ -1,15 +1,15 @@
 'use client';
 
-import React, { useEffect, useState, useTransition } from 'react';
+import React, { useEffect, useState, useTransition, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Search, Filter, ShieldCheck, RefreshCw } from 'lucide-react';
+import { Search, Filter, ShieldCheck, RefreshCw, Compass } from 'lucide-react';
 import { Resource, ResourceCategory } from '@/lib/types';
 import { searchResources, ScoredResource } from '@/tools/resources';
 import { ResourceCard } from '@/components/resources/ResourceCard';
 import { ResourceDetailModal } from '@/components/resources/ResourceDetailModal';
 import { useLanguage } from '@/components/providers/LanguageProvider';
 
-export default function ResourcesPage() {
+function ResourcesContent() {
   const searchParams = useSearchParams();
   const initialCategory = (searchParams.get('category') as ResourceCategory) || 'all';
   const initialQuery = searchParams.get('q') || '';
@@ -47,6 +47,7 @@ export default function ResourcesPage() {
 
   useEffect(() => {
     performSearch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, language]);
 
   const handleSaveToPlan = (resource: Resource) => {
@@ -170,5 +171,20 @@ export default function ResourcesPage() {
         onAddToActionPlan={handleSaveToPlan}
       />
     </div>
+  );
+}
+
+export default function ResourcesPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="py-20 text-center text-slate-500 flex flex-col items-center justify-center gap-2">
+          <Compass className="w-8 h-8 animate-spin text-civic-700" />
+          <span className="text-xs font-semibold">Loading community resource directory...</span>
+        </div>
+      }
+    >
+      <ResourcesContent />
+    </Suspense>
   );
 }

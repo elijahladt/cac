@@ -83,6 +83,7 @@ export function ChatInterface() {
         },
       ]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
 
   // Handle URL query parameters if navigated with a prompt
@@ -92,6 +93,7 @@ export function ChatInterface() {
     } else if (initialMode === 'voice') {
       startVoiceRecognition();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuery, initialMode]);
 
   const handleSendMessage = async (textToSend: string) => {
@@ -174,14 +176,31 @@ export function ChatInterface() {
   const startVoiceRecognition = () => {
     setRecognitionError(null);
 
-    // Check browser speech recognition API (Web Speech API)
-    const SpeechRecognition =
-      (window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown })
-        .SpeechRecognition ||
-      (window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown })
-        .webkitSpeechRecognition;
+    interface WindowWithSpeech extends Window {
+      SpeechRecognition?: new () => {
+        lang: string;
+        interimResults: boolean;
+        maxAlternatives: number;
+        onresult: (e: { results: { [index: number]: { [index: number]: { transcript: string } } } }) => void;
+        onerror: (e: { error: string }) => void;
+        onend: () => void;
+        start: () => void;
+      };
+      webkitSpeechRecognition?: new () => {
+        lang: string;
+        interimResults: boolean;
+        maxAlternatives: number;
+        onresult: (e: { results: { [index: number]: { [index: number]: { transcript: string } } } }) => void;
+        onerror: (e: { error: string }) => void;
+        onend: () => void;
+        start: () => void;
+      };
+    }
 
-    if (!SpeechRecognition) {
+    const win = typeof window !== 'undefined' ? (window as WindowWithSpeech) : null;
+    const SpeechClass = win?.SpeechRecognition || win?.webkitSpeechRecognition;
+
+    if (!SpeechClass) {
       // Fallback demo speech transcription if Web Speech is blocked in environment
       const demoSpanish =
         'Mi factura de electricidad está muy alta y no tengo suficiente dinero. También necesito comida para mis hijos.';
@@ -193,27 +212,23 @@ export function ChatInterface() {
     }
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const recognition = new (SpeechRecognition as any)();
+      const recognition = new SpeechClass();
       recognition.lang = language === 'es' ? 'es-US' : language === 'tl' ? 'fil-PH' : 'en-US';
       recognition.interimResults = false;
       recognition.maxAlternatives = 1;
 
       setIsListening(true);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
         setVoiceTranscript(transcript);
         setIsListening(false);
         setShowVoiceConfirm(true);
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      recognition.onerror = (event: any) => {
+      recognition.onerror = (event) => {
         console.warn('Speech recognition error:', event.error);
         setIsListening(false);
-        // Graceful fallback to demo phrase so user can still test voice confirmation modal
         const demoSpanish =
           'Mi factura de electricidad está muy alta y no tengo suficiente dinero. También necesito comida para mis hijos.';
         const demoEnglish =
