@@ -26,7 +26,7 @@ export function VoiceInputModal({
   const [step, setStep] = useState<'record' | 'confirm' | 'edit'>('record');
   const [editableText, setEditableText] = useState('');
 
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<any>(null);
 
   useEffect(() => {
     if (isOpen) {
