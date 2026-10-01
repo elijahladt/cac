@@ -23,7 +23,7 @@ import {
   setAudioModeAsync,
 } from 'expo-audio';
 import { SupportedLanguage } from '../types';
-import { API_BASE_URL } from '../services/api';
+import { getApiBaseUrl, API_BASE_URL } from '../services/api';
 
 interface Props {
   visible: boolean;
@@ -268,7 +268,8 @@ export default function VoiceModal({
         if (base64Data) {
           const controller = new AbortController();
           const timer = setTimeout(() => controller.abort(), 12000);
-          const res = await fetch(`${API_BASE_URL}/api/voice/transcribe`, {
+          const baseUrl = getApiBaseUrl();
+          const res = await fetch(`${baseUrl}/api/voice/transcribe`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
