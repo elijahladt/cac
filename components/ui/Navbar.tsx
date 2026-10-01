@@ -14,10 +14,11 @@ export function Navbar() {
   const navLinks = [
     { href: '/', label: t.nav.home, icon: Compass },
     { href: '/chat', label: t.nav.navigator, icon: MessageSquare },
+    { href: '/eligibility', label: 'Eligibility', icon: BookOpen },
+    { href: '/intake', label: 'Direct Intake', icon: ClipboardList },
+    { href: '/tracking', label: 'Track Referrals', icon: Shield },
     { href: '/resources', label: t.nav.resources, icon: BookOpen },
-    { href: '/case', label: t.nav.myCase, icon: ClipboardList },
     { href: '/map', label: t.nav.map, icon: MapPin },
-    { href: '/about', label: t.nav.about, icon: Info },
   ];
 
   return (

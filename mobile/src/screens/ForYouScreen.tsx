@@ -19,7 +19,7 @@ import { TRANSLATIONS } from '../i18n/translations';
 interface Props {
   user: UserProfile;
   lang: SupportedLanguage;
-  onNavigateTab: (tab: 'chat' | 'resources' | 'documents' | 'case') => void;
+  onNavigateTab: (tab: 'chat' | 'resources' | 'case' | 'intake' | 'eligibility' | 'documents') => void;
   onOpenVoice: () => void;
   onEditSurvey: () => void;
   onOpenEmergency: () => void;
@@ -153,6 +153,45 @@ export default function ForYouScreen({
         <TouchableOpacity style={styles.voiceBannerBtn} onPress={onOpenVoice} activeOpacity={0.8}>
           <Ionicons name="mic" size={20} color="#ffffff" style={{ marginRight: 6 }} />
           <Text style={styles.voiceBannerBtnText}>Speak to Navigator</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* 3 Quick Action Protocol Cards */}
+      <View style={styles.protocolGrid}>
+        <TouchableOpacity
+          style={[styles.protocolCard, { backgroundColor: '#f0fdf4', borderColor: '#bbf7d0' }]}
+          onPress={() => onNavigateTab('eligibility')}
+          activeOpacity={0.8}
+        >
+          <View style={styles.protocolIconCircle}>
+            <Ionicons name="calculator" size={18} color="#16a34a" />
+          </View>
+          <Text style={styles.protocolTitle}>Eligibility Rules</Text>
+          <Text style={styles.protocolSub}>FPL & AMI matching</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.protocolCard, { backgroundColor: '#f0f9ff', borderColor: '#bae6fd' }]}
+          onPress={() => onNavigateTab('intake')}
+          activeOpacity={0.8}
+        >
+          <View style={styles.protocolIconCircle}>
+            <Ionicons name="paper-plane" size={18} color="#0284c7" />
+          </View>
+          <Text style={styles.protocolTitle}>Direct Intake</Text>
+          <Text style={styles.protocolSub}>1-form queue dispatch</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.protocolCard, { backgroundColor: '#faf5ff', borderColor: '#e9d5ff' }]}
+          onPress={() => onNavigateTab('intake')}
+          activeOpacity={0.8}
+        >
+          <View style={styles.protocolIconCircle}>
+            <Ionicons name="shield-checkmark" size={18} color="#9333ea" />
+          </View>
+          <Text style={styles.protocolTitle}>Track Referrals</Text>
+          <Text style={styles.protocolSub}>Closed-loop milestones</Text>
         </TouchableOpacity>
       </View>
 
@@ -573,5 +612,42 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#64748b',
     lineHeight: 15,
+  },
+  protocolGrid: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  protocolCard: {
+    flex: 1,
+    borderRadius: 14,
+    padding: 10,
+    borderWidth: 1,
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+  protocolIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#ffffff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 6,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  protocolTitle: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#0f172a',
+    textAlign: 'center',
+  },
+  protocolSub: {
+    fontSize: 9,
+    color: '#64748b',
+    textAlign: 'center',
+    marginTop: 1,
   },
 });

@@ -21,10 +21,12 @@ import ChatScreen from './src/screens/ChatScreen';
 import ResourcesScreen from './src/screens/ResourcesScreen';
 import DocumentScannerScreen from './src/screens/DocumentScannerScreen';
 import CaseScreen from './src/screens/CaseScreen';
+import EligibilityScreen from './src/screens/EligibilityScreen';
+import IntakeTrackingScreen from './src/screens/IntakeTrackingScreen';
 import EmergencyModal from './src/screens/EmergencyModal';
 import VoiceModal from './src/components/VoiceModal';
 
-type Tab = 'for_you' | 'chat' | 'resources' | 'documents' | 'case';
+type Tab = 'for_you' | 'chat' | 'intake' | 'eligibility' | 'resources' | 'case' | 'documents';
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -188,8 +190,14 @@ export default function App() {
             />
           )}
 
+          {activeTab === 'intake' && <IntakeTrackingScreen lang={lang} />}
+          {activeTab === 'eligibility' && (
+            <EligibilityScreen
+              lang={lang}
+              onNavigateToIntake={() => setActiveTab('intake')}
+            />
+          )}
           {activeTab === 'resources' && <ResourcesScreen lang={lang} />}
-          {activeTab === 'documents' && <DocumentScannerScreen lang={lang} />}
           {activeTab === 'case' && <CaseScreen lang={lang} />}
         </View>
 
@@ -206,7 +214,7 @@ export default function App() {
               color={activeTab === 'for_you' ? '#0284c7' : '#94a3b8'}
             />
             <Text style={[styles.tabLabel, activeTab === 'for_you' && styles.tabLabelActive]}>
-              {t.tab_for_you || 'For You'}
+              For You
             </Text>
           </TouchableOpacity>
 
@@ -221,7 +229,37 @@ export default function App() {
               color={activeTab === 'chat' ? '#0284c7' : '#94a3b8'}
             />
             <Text style={[styles.tabLabel, activeTab === 'chat' && styles.tabLabelActive]}>
-              {t.tab_chat}
+              Chat
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.tabBtn}
+            onPress={() => setActiveTab('intake')}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name={activeTab === 'intake' ? 'paper-plane' : 'paper-plane-outline'}
+              size={20}
+              color={activeTab === 'intake' ? '#0284c7' : '#94a3b8'}
+            />
+            <Text style={[styles.tabLabel, activeTab === 'intake' && styles.tabLabelActive]}>
+              Intake
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.tabBtn}
+            onPress={() => setActiveTab('eligibility')}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name={activeTab === 'eligibility' ? 'calculator' : 'calculator-outline'}
+              size={20}
+              color={activeTab === 'eligibility' ? '#0284c7' : '#94a3b8'}
+            />
+            <Text style={[styles.tabLabel, activeTab === 'eligibility' && styles.tabLabelActive]}>
+              Eligibility
             </Text>
           </TouchableOpacity>
 
@@ -236,37 +274,7 @@ export default function App() {
               color={activeTab === 'resources' ? '#0284c7' : '#94a3b8'}
             />
             <Text style={[styles.tabLabel, activeTab === 'resources' && styles.tabLabelActive]}>
-              {t.tab_resources}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.tabBtn}
-            onPress={() => setActiveTab('documents')}
-            activeOpacity={0.7}
-          >
-            <Ionicons
-              name={activeTab === 'documents' ? 'document-text' : 'document-text-outline'}
-              size={20}
-              color={activeTab === 'documents' ? '#0284c7' : '#94a3b8'}
-            />
-            <Text style={[styles.tabLabel, activeTab === 'documents' && styles.tabLabelActive]}>
-              {t.tab_documents}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.tabBtn}
-            onPress={() => setActiveTab('case')}
-            activeOpacity={0.7}
-          >
-            <Ionicons
-              name={activeTab === 'case' ? 'checkbox' : 'checkbox-outline'}
-              size={20}
-              color={activeTab === 'case' ? '#0284c7' : '#94a3b8'}
-            />
-            <Text style={[styles.tabLabel, activeTab === 'case' && styles.tabLabelActive]}>
-              {t.tab_case}
+              Resources
             </Text>
           </TouchableOpacity>
         </View>
