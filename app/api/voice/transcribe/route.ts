@@ -32,29 +32,51 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!AI_CONFIG.hasApiKey) {
+    let transcriptionText = '';
+    let usedProvider = 'openai_whisper';
+
+    if (AI_CONFIG.hasGroqKey) {
+      // 1. High-speed, free Whisper Large v3 on Groq
+      const groqClient = new OpenAI({
+        apiKey: AI_CONFIG.groqApiKey,
+        baseURL: 'https://api.groq.com/openai/v1',
+      });
+
+      const transcription = await groqClient.audio.transcriptions.create({
+        file: audioFile,
+        model: AI_CONFIG.groqWhisperModel,
+        language: language === 'es' ? 'es' : language === 'tl' ? 'tl' : 'en',
+      });
+
+      transcriptionText = transcription.text;
+      usedProvider = 'groq_whisper_large_v3';
+    } else if (AI_CONFIG.hasApiKey) {
+      // 2. OpenAI Whisper
+      const openai = new OpenAI({ apiKey: AI_CONFIG.apiKey });
+
+      const transcription = await openai.audio.transcriptions.create({
+        file: audioFile,
+        model: AI_CONFIG.whisperModel,
+        language: language === 'es' ? 'es' : language === 'tl' ? 'tl' : 'en',
+      });
+
+      transcriptionText = transcription.text;
+      usedProvider = 'openai_whisper';
+    } else {
       return NextResponse.json({
-        error: 'NO_OPENAI_KEY',
-        message: 'OpenAI API key is not configured for Whisper transcription. Use device keyboard mic or select a quick voice phrase.',
+        error: 'NO_API_KEY',
+        message: 'Speech transcription requires an API key (Groq or OpenAI). Use your device keyboard microphone or select a quick voice phrase.',
         language,
         transcript: '',
       });
     }
 
-    const openai = new OpenAI({ apiKey: AI_CONFIG.apiKey });
-
-    const transcription = await openai.audio.transcriptions.create({
-      file: audioFile,
-      model: AI_CONFIG.whisperModel,
-      language: language === 'es' ? 'es' : language === 'tl' ? 'tl' : 'en',
-    });
-
     return NextResponse.json({
-      transcript: transcription.text,
-      text: transcription.text,
+      transcript: transcriptionText,
+      text: transcriptionText,
       language,
       confidence: 0.99,
-      mode: 'openai_whisper',
+      mode: usedProvider,
     });
   } catch (error: any) {
     console.error('Whisper transcription error:', error?.message || error);

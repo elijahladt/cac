@@ -8,6 +8,9 @@ export const AI_CONFIG = {
   whisperModel: process.env.OPENAI_WHISPER_MODEL || 'whisper-1',
   apiKey: process.env.OPENAI_API_KEY || '',
   hasApiKey: Boolean(process.env.OPENAI_API_KEY),
+  groqApiKey: process.env.GROQ_API_KEY || '',
+  hasGroqKey: Boolean(process.env.GROQ_API_KEY),
+  groqWhisperModel: process.env.GROQ_WHISPER_MODEL || 'whisper-large-v3-turbo',
 };
 
 export const SYSTEM_ROLE_DESCRIPTIONS = {
