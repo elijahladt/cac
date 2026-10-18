@@ -280,7 +280,7 @@ export default function ReferralTrackingDashboard() {
                         {ref.caseworkerName || 'Triage Intake Team (Assigning)'}
                       </div>
                       {ref.caseworkerNote && ref.status !== 'ACTION_REQUIRED' && (
-                        <p className="text-[11px] text-slate-600 italic">"{ref.caseworkerNote}"</p>
+                        <p className="text-[11px] text-slate-600 italic">&ldquo;{ref.caseworkerNote}&rdquo;</p>
                       )}
                     </div>
 

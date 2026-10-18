@@ -298,7 +298,7 @@ export default function AdminPage() {
                 {/* Service Specifics */}
                 {sub.serviceDetails.urgentStatement && (
                   <p className="text-xs text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-100 italic">
-                    "{sub.serviceDetails.urgentStatement}"
+                    &ldquo;{sub.serviceDetails.urgentStatement}&rdquo;
                   </p>
                 )}
 
