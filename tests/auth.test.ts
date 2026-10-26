@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { DEMO_PROFILES, NV04_ZIP_CODES } from '../lib/auth/demoProfiles';
 import { evaluateProgrammaticEligibility, getMonthlyFplThreshold } from '../lib/eligibility/rulesEngine';
+import { getTranslation } from '../lib/i18n';
 
 describe('Auth & Personalization System', () => {
   it('defines valid North Las Vegas / NV-04 demo profiles', () => {
@@ -58,5 +59,26 @@ describe('Auth & Personalization System', () => {
     expect(marcus.profile.isVeteran).toBe(true);
     expect(marcus.profile.householdSize).toBe(1);
     expect(marcus.profile.primaryNeeds).toContain('housing');
+  });
+
+  it('translates entire app for personalized languages (Spanish and Tagalog)', () => {
+    const es = getTranslation('es');
+    const tl = getTranslation('tl');
+
+    expect(es.nav.home).toBe('Inicio');
+    expect(es.nav.eligibility).toBe('Elegibilidad');
+    expect(es.nav.intake).toBe('Trámite Directo');
+    expect(es.auth.fullName).toBe('Nombre Completo');
+    expect(es.categories.utility_assistance).toContain('Servicios');
+
+    expect(tl.nav.home).toBe('Home');
+    expect(tl.nav.eligibility).toBe('Pagiging Karapat-dapat');
+    expect(tl.nav.intake).toBe('Direktang Aplikasyon');
+    expect(tl.auth.fullName).toBe('Buong Pangalan');
+    expect(tl.categories.food_assistance).toContain('Pagkain');
+
+    // Tagalog demo profile (Rosario Cruz)
+    const cruz = DEMO_PROFILES.find((d) => d.id === 'demo-cruz')!;
+    expect(cruz.profile.preferredLanguage).toBe('tl');
   });
 });

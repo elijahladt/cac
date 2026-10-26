@@ -143,10 +143,10 @@ export default function HomePage() {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-extrabold text-sm text-slate-900">
-                      Welcome, {user.profile.fullName}
+                      {t.welcomeUser}, {user.profile.fullName}
                     </span>
                     <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">
-                      Personalized
+                      {t.personalizedFor}
                     </span>
                   </div>
                   <p className="text-xs text-slate-500 mt-0.5">
@@ -160,27 +160,27 @@ export default function HomePage() {
                   href="/intake"
                   className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-2xs inline-flex items-center gap-1"
                 >
-                  <span>1-Click Intake</span>
+                  <span>{t.oneClickIntake}</span>
                   <ArrowRight className="w-3 h-3" />
                 </Link>
                 <Link
                   href="/profile"
                   className="px-2.5 py-1.5 rounded-lg border border-slate-300 hover:bg-white text-slate-700 font-semibold text-xs transition"
                 >
-                  My Profile
+                  {t.myProfileBtn}
                 </Link>
               </div>
             </div>
 
             {user.profile.primaryNeeds?.length > 0 && (
               <div className="mt-3 pt-3 border-t border-civic-100 flex flex-wrap items-center gap-1.5 text-xs">
-                <span className="text-[11px] font-bold text-slate-600">Your Priority Needs:</span>
+                <span className="text-[11px] font-bold text-slate-600">{t.priorityNeedsLabel}</span>
                 {user.profile.primaryNeeds.map((n) => (
                   <span
                     key={n}
                     className="px-2 py-0.5 rounded bg-white border border-civic-200 text-civic-800 font-semibold text-[11px] capitalize"
                   >
-                    {n.replace('_', ' ')}
+                    {t.categories[n] || n.replace('_', ' ')}
                   </span>
                 ))}
               </div>
@@ -193,9 +193,9 @@ export default function HomePage() {
                 <Sparkles className="w-4 h-4 text-amber-700" />
               </div>
               <div>
-                <div className="text-xs font-bold text-slate-900">Want personalized assistance matches?</div>
+                <div className="text-xs font-bold text-slate-900">{t.wantPersonalized}</div>
                 <div className="text-[11px] text-slate-600">
-                  Answer 3 quick questions to calculate your exact poverty level &amp; auto-fill forms.
+                  {t.wantPersonalizedSub}
                 </div>
               </div>
             </div>
@@ -204,13 +204,13 @@ export default function HomePage() {
                 href="/signup"
                 className="flex-1 sm:flex-none text-center px-3 py-1.5 rounded-xl bg-civic-700 hover:bg-civic-800 text-white text-xs font-bold shadow-2xs transition"
               >
-                Sign Up &amp; Personalize
+                {t.signUpPersonalize}
               </Link>
               <Link
                 href="/login"
                 className="flex-1 sm:flex-none text-center px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-white transition"
               >
-                Sign In
+                {t.signInBtn}
               </Link>
             </div>
           </div>
@@ -304,9 +304,9 @@ export default function HomePage() {
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-slate-900">100% Verified Records</h2>
+            <h2 className="text-sm font-bold text-slate-900">{t.pillars.verifiedTitle}</h2>
             <p className="text-xs text-slate-600 mt-0.5">
-              Strictly verified government & community programs. Zero AI hallucinations.
+              {t.pillars.verifiedDesc}
             </p>
           </div>
         </div>
@@ -316,9 +316,9 @@ export default function HomePage() {
             <FileCheck2 className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-slate-900">Document Readiness</h2>
+            <h2 className="text-sm font-bold text-slate-900">{t.pillars.docsTitle}</h2>
             <p className="text-xs text-slate-600 mt-0.5">
-              Photograph utility bills or income letters to verify requirements confidentially.
+              {t.pillars.docsDesc}
             </p>
           </div>
         </div>
@@ -328,9 +328,9 @@ export default function HomePage() {
             <MapPin className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-slate-900">Personal Action Plan</h2>
+            <h2 className="text-sm font-bold text-slate-900">{t.pillars.planTitle}</h2>
             <p className="text-xs text-slate-600 mt-0.5">
-              Step-by-step guidance, directions, required paperwork, and real contact links.
+              {t.pillars.planDesc}
             </p>
           </div>
         </div>
@@ -347,7 +347,7 @@ export default function HomePage() {
             onClick={() => router.push('/resources')}
             className="text-xs font-semibold text-civic-700 hover:text-civic-800 flex items-center gap-1"
           >
-            <span>View all resources</span>
+            <span>{t.viewAllResources}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -372,7 +372,7 @@ export default function HomePage() {
                   </p>
                 </div>
                 <div className="mt-3 flex items-center text-[11px] font-semibold text-slate-700">
-                  <span>Explore</span>
+                  <span>{t.explore}</span>
                   <ArrowRight className="w-3 h-3 ml-1" />
                 </div>
               </button>

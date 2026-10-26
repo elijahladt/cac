@@ -40,7 +40,7 @@ interface PersonalizationWizardProps {
 export function PersonalizationWizard({ mode = 'signup', onCompleted }: PersonalizationWizardProps) {
   const router = useRouter();
   const { user, signup, updateProfile } = useAuth();
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
 
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
@@ -172,19 +172,24 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
   );
   const qualifiedMatches = instantEvaluations.filter((e) => e.status === 'QUALIFIED');
 
+  const handleLanguageSelect = (langCode: SupportedLanguage) => {
+    setPreferredLang(langCode);
+    setLanguage(langCode);
+  };
+
   const categoriesList: {
     key: ResourceCategory;
     name: string;
     icon: React.ComponentType<{ className?: string }>;
     desc: string;
   }[] = [
-    { key: 'utility_assistance', name: 'Utility & Energy Bills', icon: Zap, desc: 'NV Energy & Southwest Gas payment aid' },
-    { key: 'food_assistance', name: 'Food & Groceries', icon: Apple, desc: 'Pantries, SNAP/EBT & food box deliveries' },
-    { key: 'housing', name: 'Emergency Rent & Housing', icon: Home, desc: 'Eviction defense & rental assistance' },
-    { key: 'healthcare', name: 'Health & Community Clinics', icon: HeartPulse, desc: 'No-cost clinics, prescriptions & Medicaid' },
-    { key: 'childcare', name: 'Childcare & Youth Programs', icon: Baby, desc: 'Head Start, early learning & subsidies' },
-    { key: 'jobs', name: 'Job Training & Careers', icon: Briefcase, desc: 'Employ NV workforce training & placement' },
-    { key: 'transportation', name: 'Transportation & Bus Passes', icon: Bus, desc: 'RTC discounted passes & transit access' },
+    { key: 'utility_assistance', name: t.categories.utility_assistance, icon: Zap, desc: 'NV Energy & Southwest Gas payment aid' },
+    { key: 'food_assistance', name: t.categories.food_assistance, icon: Apple, desc: 'Pantries, SNAP/EBT & food box deliveries' },
+    { key: 'housing', name: t.categories.housing, icon: Home, desc: 'Eviction defense & rental assistance' },
+    { key: 'healthcare', name: t.categories.healthcare, icon: HeartPulse, desc: 'No-cost clinics, prescriptions & Medicaid' },
+    { key: 'childcare', name: t.categories.childcare, icon: Baby, desc: 'Head Start, early learning & subsidies' },
+    { key: 'jobs', name: t.categories.jobs, icon: Briefcase, desc: 'Employ NV workforce training & placement' },
+    { key: 'transportation', name: t.categories.transportation, icon: Bus, desc: 'RTC discounted passes & transit access' },
   ];
 
   return (
@@ -201,21 +206,21 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
             </span>
           </div>
           <span className="text-xs text-slate-300 font-medium">
-            {currentStep <= 3 ? `Step ${currentStep} of 3` : 'Setup Complete'}
+            {currentStep <= 3 ? t.auth.stepOf.replace('{step}', String(currentStep)) : t.auth.setupComplete}
           </span>
         </div>
 
         <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-          {currentStep === 1 && 'Create Your Personalized Profile'}
-          {currentStep === 2 && 'Location & Household Details'}
-          {currentStep === 3 && 'Assistance Needs & Priorities'}
-          {currentStep === 4 && 'Your Personalized Portal is Ready!'}
+          {currentStep === 1 && t.auth.step1Title}
+          {currentStep === 2 && t.auth.step2Title}
+          {currentStep === 3 && t.auth.step3Title}
+          {currentStep === 4 && t.auth.step4Title}
         </h2>
         <p className="text-slate-300 text-xs sm:text-sm mt-1.5 leading-relaxed">
-          {currentStep === 1 && 'Your answers customize eligibility calculations and auto-fill applications across Nevada Nexus.'}
-          {currentStep === 2 && 'We strictly filter for programs serving North Las Vegas and Congressional District 4.'}
-          {currentStep === 3 && 'Choose what matters most to your household right now.'}
-          {currentStep === 4 && 'Here are verified Nevada programs matched specifically to your situation.'}
+          {currentStep === 1 && t.auth.step1Desc}
+          {currentStep === 2 && t.auth.step2Desc}
+          {currentStep === 3 && t.auth.step3Desc}
+          {currentStep === 4 && t.auth.step4Desc}
         </p>
 
         {/* Step dots */}
@@ -244,7 +249,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
           <div className="space-y-5">
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Full Name
+                {t.auth.fullName}
               </label>
               <div className="relative">
                 <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -262,7 +267,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Email Address
+                  {t.auth.emailLabel}
                 </label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -280,7 +285,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Phone (Optional)
+                  {t.auth.phoneOptional}
                 </label>
                 <div className="relative">
                   <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -298,7 +303,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
             {mode === 'signup' && (
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Password
+                  {t.auth.passwordLabel}
                 </label>
                 <div className="relative">
                   <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -316,7 +321,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
 
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Preferred Language
+                {t.auth.preferredLanguage}
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {[
@@ -327,7 +332,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
                   <button
                     key={item.code}
                     type="button"
-                    onClick={() => setPreferredLang(item.code)}
+                    onClick={() => handleLanguageSelect(item.code)}
                     className={`py-2 px-3 rounded-xl border text-xs font-semibold text-center transition ${
                       preferredLang === item.code
                         ? 'border-civic-600 bg-civic-50 text-civic-700 font-bold ring-2 ring-civic-600/20'
@@ -346,7 +351,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
                 onClick={handleNext}
                 className="w-full py-3 px-4 rounded-xl bg-civic-700 hover:bg-civic-800 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition"
               >
-                <span>Continue to Household Details</span>
+                <span>{t.auth.continueToHousehold}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -358,7 +363,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
           <div className="space-y-5">
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                North Las Vegas / NV-04 Zip Code
+                {t.auth.zipCodeLabel}
               </label>
               <select
                 value={zipCode}
@@ -373,14 +378,14 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
               </select>
               <p className="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
                 <MapPin className="w-3.5 h-3.5 text-civic-600" />
-                <span>Geographic targeting ensures direct access to local Clark County providers.</span>
+                <span>{t.auth.zipCodeNote}</span>
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Household Size (Persons)
+                  {t.auth.householdSizeLabel}
                 </label>
                 <div className="relative">
                   <Users className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -397,7 +402,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Monthly Gross Income ($)
+                  {t.auth.monthlyIncomeLabel}
                 </label>
                 <div className="relative">
                   <DollarSign className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -416,7 +421,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
             {/* Income guide badge */}
             <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center justify-between">
               <div>
-                <span className="font-semibold text-slate-800">150% Federal Poverty Ceiling:</span>{' '}
+                <span className="font-semibold text-slate-800">{t.auth.fplCeilingLabel}</span>{' '}
                 ${fpl150.toLocaleString()}/mo for {householdSize} people
               </div>
               <span
@@ -424,20 +429,20 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
                   isBelow150Fpl ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
                 }`}
               >
-                {isBelow150Fpl ? 'Qualifies for Full EAP / REACH' : 'Income Above 150% FPL'}
+                {isBelow150Fpl ? t.auth.qualifiesFullEap : t.auth.incomeAbove150}
               </span>
             </div>
 
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Current Housing Situation
+                {t.auth.housingSituationLabel}
               </label>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 {[
-                  { id: 'stable', label: 'Stable Housing (Renting/Owner)' },
-                  { id: 'at_risk', label: 'Renting with Eviction / Shutoff Risk' },
-                  { id: 'couch_surfing', label: 'Staying with Friends / Family' },
-                  { id: 'unhoused', label: 'Unhoused / Temporary Shelter' },
+                  { id: 'stable', label: t.auth.stableHousing },
+                  { id: 'at_risk', label: t.auth.atRiskHousing },
+                  { id: 'couch_surfing', label: t.auth.couchSurfing },
+                  { id: 'unhoused', label: t.auth.unhoused },
                 ].map((item) => (
                   <button
                     key={item.id}
@@ -462,14 +467,14 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
                 className="py-3 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-sm flex items-center justify-center gap-1.5 transition"
               >
                 <ArrowLeft className="w-4 h-4" />
-                <span>Back</span>
+                <span>{t.auth.back}</span>
               </button>
               <button
                 type="button"
                 onClick={handleNext}
                 className="flex-1 py-3 px-4 rounded-xl bg-civic-700 hover:bg-civic-800 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition"
               >
-                <span>Continue to Priorities</span>
+                <span>{t.auth.continueToPriorities}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -481,7 +486,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
           <div className="space-y-5">
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                What assistance do you need most? (Select all that apply)
+                {t.auth.needsQuestion}
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {categoriesList.map((cat) => {
@@ -517,7 +522,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
 
             <div className="pt-2 border-t border-slate-100">
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                Household Circumstances (For accurate statutory matching)
+                {t.auth.circumstancesTitle}
               </label>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <label className="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
@@ -527,7 +532,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
                     onChange={(e) => setHasChildren(e.target.checked)}
                     className="w-4 h-4 rounded text-civic-600"
                   />
-                  <span className="font-medium text-slate-700">Children under 18</span>
+                  <span className="font-medium text-slate-700">{t.auth.childrenUnder18}</span>
                 </label>
 
                 <label className="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
@@ -537,7 +542,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
                     onChange={(e) => setHasSeniors(e.target.checked)}
                     className="w-4 h-4 rounded text-civic-600"
                   />
-                  <span className="font-medium text-slate-700">Seniors (Age 60+)</span>
+                  <span className="font-medium text-slate-700">{t.auth.seniorsAge60}</span>
                 </label>
 
                 <label className="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
@@ -547,7 +552,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
                     onChange={(e) => setIsVeteran(e.target.checked)}
                     className="w-4 h-4 rounded text-civic-600"
                   />
-                  <span className="font-medium text-slate-700">Military Veteran</span>
+                  <span className="font-medium text-slate-700">{t.auth.militaryVeteran}</span>
                 </label>
 
                 <label className="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
@@ -557,7 +562,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
                     onChange={(e) => setHasDisability(e.target.checked)}
                     className="w-4 h-4 rounded text-civic-600"
                   />
-                  <span className="font-medium text-slate-700">Person with Disability</span>
+                  <span className="font-medium text-slate-700">{t.auth.personDisability}</span>
                 </label>
 
                 <label className="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
@@ -567,7 +572,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
                     onChange={(e) => setHasPastDueUtility(e.target.checked)}
                     className="w-4 h-4 rounded text-civic-600"
                   />
-                  <span className="font-medium text-slate-700">Past-Due Utility Bill</span>
+                  <span className="font-medium text-slate-700">{t.auth.pastDueUtility}</span>
                 </label>
 
                 <label className="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
@@ -577,7 +582,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
                     onChange={(e) => setHasDisconnectNotice(e.target.checked)}
                     className="w-4 h-4 rounded text-civic-600"
                   />
-                  <span className="font-medium text-slate-700">Active Shutoff Notice</span>
+                  <span className="font-medium text-slate-700">{t.auth.activeShutoffNotice}</span>
                 </label>
               </div>
             </div>
@@ -589,7 +594,7 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
                 className="py-3 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-sm flex items-center justify-center gap-1.5 transition"
               >
                 <ArrowLeft className="w-4 h-4" />
-                <span>Back</span>
+                <span>{t.auth.back}</span>
               </button>
               <button
                 type="button"
@@ -598,11 +603,11 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
                 className="flex-1 py-3 px-4 rounded-xl bg-civic-700 hover:bg-civic-800 disabled:bg-slate-300 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition"
               >
                 {isSubmitting ? (
-                  <span>Personalizing Portal...</span>
+                  <span>{t.auth.savingProfile}</span>
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 text-amber-300" />
-                    <span>Complete & Save My Personalized Profile</span>
+                    <span>{t.auth.saveProfileBtn}</span>
                   </>
                 )}
               </button>
@@ -619,10 +624,10 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
 
             <div>
               <h3 className="text-2xl font-extrabold text-slate-900">
-                Welcome to Nevada Nexus, {fullName}!
+                {t.auth.welcomeUserTitle.replace('{name}', fullName)}
               </h3>
               <p className="text-sm text-slate-600 mt-1 max-w-md mx-auto">
-                Your profile is saved. All navigation, eligibility checks, and intake forms are now personalized for your household in zip code <span className="font-semibold text-slate-900">{zipCode}</span>.
+                {t.auth.profileSavedDesc.replace('{zip}', zipCode)}
               </p>
             </div>
 
@@ -631,10 +636,10 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
               <div className="flex items-center justify-between text-xs">
                 <span className="font-bold text-slate-800 flex items-center gap-1.5">
                   <Sparkles className="w-4 h-4 text-amber-500" />
-                  Instant Matches for Your Profile
+                  {t.auth.instantMatches}
                 </span>
                 <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">
-                  {qualifiedMatches.length} Programs Qualified
+                  {t.auth.programsQualified.replace('{count}', String(qualifiedMatches.length))}
                 </span>
               </div>
 
@@ -665,8 +670,8 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
                 }}
                 className="p-3 rounded-xl bg-civic-700 hover:bg-civic-800 text-white font-bold text-xs flex flex-col items-center justify-center gap-1 shadow-sm transition"
               >
-                <span>Ask AI Navigator</span>
-                <span className="text-[10px] text-civic-200 font-normal">Pre-loaded with your profile</span>
+                <span>{t.auth.askAiNavigator}</span>
+                <span className="text-[10px] text-civic-200 font-normal">{t.auth.preLoadedProfile}</span>
               </button>
 
               <button
@@ -676,8 +681,8 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
                 }}
                 className="p-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex flex-col items-center justify-center gap-1 shadow-sm transition"
               >
-                <span>Direct Electronic Intake</span>
-                <span className="text-[10px] text-emerald-200 font-normal">Pre-filled application</span>
+                <span>{t.auth.preFilledIntake}</span>
+                <span className="text-[10px] text-emerald-200 font-normal">{t.auth.preFilledApplication}</span>
               </button>
 
               <button
@@ -687,8 +692,8 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
                 }}
                 className="p-3 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-800 font-bold text-xs flex flex-col items-center justify-center gap-1 transition"
               >
-                <span>View Full Eligibility</span>
-                <span className="text-[10px] text-slate-500 font-normal">Rules engine details</span>
+                <span>{t.auth.viewFullEligibility}</span>
+                <span className="text-[10px] text-slate-500 font-normal">{t.auth.rulesEngineDetails}</span>
               </button>
             </div>
           </div>

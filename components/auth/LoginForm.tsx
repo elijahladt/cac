@@ -15,11 +15,13 @@ import {
   Compass,
 } from 'lucide-react';
 import { useAuth } from '@/components/providers/AuthProvider';
+import { useLanguage } from '@/components/providers/LanguageProvider';
 import { DEMO_PROFILES } from '@/lib/auth/demoProfiles';
 
 export function LoginForm() {
   const router = useRouter();
   const { login, loginAsDemo } = useAuth();
+  const { t } = useLanguage();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -58,10 +60,10 @@ export function LoginForm() {
           <Compass className="w-7 h-7" />
         </div>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-          Welcome to Nevada Nexus
+          {t.auth.signInTitle}
         </h2>
         <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-sm mx-auto">
-          Sign in to access your personalized eligibility matches, auto-filled direct intakes, and saved referrals.
+          {t.auth.signInSubtitle}
         </p>
       </div>
 
@@ -78,14 +80,14 @@ export function LoginForm() {
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-civic-900 flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-amber-500" />
-              1-Click Instant Demo Login
+              {t.auth.instantDemoTitle}
             </span>
             <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-100 text-amber-900">
-              NV-04 Residents
+              {t.auth.instantDemoBadge}
             </span>
           </div>
           <p className="text-[11px] text-slate-600">
-            Select a representative North Las Vegas profile to experience personalized matches immediately:
+            {t.auth.instantDemoDesc}
           </p>
 
           <div className="grid grid-cols-1 gap-2 pt-1">
@@ -114,7 +116,7 @@ export function LoginForm() {
         <div className="relative flex items-center justify-center">
           <div className="border-t border-slate-200 w-full" />
           <span className="bg-white px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider absolute">
-            Or sign in with email
+            {t.auth.orEmail}
           </span>
         </div>
 
@@ -122,7 +124,7 @@ export function LoginForm() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Email Address
+              {t.auth.emailLabel}
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -140,7 +142,7 @@ export function LoginForm() {
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                Password
+                {t.auth.passwordLabel}
               </label>
             </div>
             <div className="relative">
@@ -160,7 +162,7 @@ export function LoginForm() {
             disabled={loading}
             className="w-full py-3 px-4 rounded-xl bg-civic-700 hover:bg-civic-800 disabled:bg-slate-300 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition mt-2"
           >
-            {loading ? <span>Signing in...</span> : <span>Sign In to Nevada Nexus</span>}
+            {loading ? <span>{t.auth.signingIn}</span> : <span>{t.auth.signInAction}</span>}
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
@@ -168,12 +170,12 @@ export function LoginForm() {
         {/* Sign up prompt */}
         <div className="text-center pt-2 border-t border-slate-100">
           <p className="text-xs text-slate-600">
-            Don&apos;t have an account yet?{' '}
+            {t.auth.noAccount}{' '}
             <Link
               href="/signup"
               className="font-bold text-civic-700 hover:text-civic-800 underline underline-offset-2"
             >
-              Sign up &amp; answer a few questions to personalize
+              {t.auth.signUpLink}
             </Link>
           </p>
         </div>

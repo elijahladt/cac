@@ -16,9 +16,9 @@ export function Navbar() {
   const navLinks = [
     { href: '/', label: t.nav.home, icon: Compass },
     { href: '/chat', label: t.nav.navigator, icon: MessageSquare },
-    { href: '/eligibility', label: 'Eligibility', icon: BookOpen },
-    { href: '/intake', label: 'Direct Intake', icon: ClipboardList },
-    { href: '/tracking', label: 'Track Referrals', icon: Shield },
+    { href: '/eligibility', label: t.nav.eligibility, icon: BookOpen },
+    { href: '/intake', label: t.nav.intake, icon: ClipboardList },
+    { href: '/tracking', label: t.nav.tracking, icon: Shield },
     { href: '/resources', label: t.nav.resources, icon: BookOpen },
     { href: '/map', label: t.nav.map, icon: MapPin },
   ];
@@ -92,14 +92,14 @@ export function Navbar() {
                 className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition"
               >
                 <LogIn className="w-3.5 h-3.5" />
-                <span>Sign In</span>
+                <span>{t.nav.signIn}</span>
               </Link>
               <Link
                 href="/signup"
                 className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-white bg-civic-700 hover:bg-civic-800 rounded-lg shadow-2xs transition"
               >
                 <Sparkles className="w-3 h-3 text-amber-300" />
-                <span>Sign Up</span>
+                <span>{t.nav.signUp}</span>
               </Link>
             </div>
           )}
@@ -110,7 +110,7 @@ export function Navbar() {
             title="Admin & Verification Portal"
           >
             <Shield className="w-3.5 h-3.5 text-slate-500" />
-            <span>Admin</span>
+            <span>{t.nav.admin}</span>
           </Link>
         </div>
       </div>

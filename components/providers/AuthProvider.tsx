@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserAccount, UserPersonalizationProfile } from '@/lib/types/auth';
 import { DEMO_PROFILES } from '@/lib/auth/demoProfiles';
+import { useLanguage } from '@/components/providers/LanguageProvider';
 
 const AUTH_STORAGE_KEY = 'nevada_nexus_current_user_v1';
 const USERS_REGISTRY_KEY = 'nevada_nexus_registered_users_v1';
@@ -24,28 +25,36 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { setLanguage } = useLanguage();
   const [user, setUser] = useState<UserAccount | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Load user from localStorage on client mount
+  // Load user from localStorage on client mount & sync preferred language
   useEffect(() => {
     try {
       const storedUser = localStorage.getItem(AUTH_STORAGE_KEY);
       if (storedUser) {
-        setUser(JSON.parse(storedUser));
+        const parsed = JSON.parse(storedUser);
+        setUser(parsed);
+        if (parsed?.profile?.preferredLanguage) {
+          setLanguage(parsed.profile.preferredLanguage);
+        }
       }
     } catch (e) {
       console.warn('Failed to load user session from localStorage:', e);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [setLanguage]);
 
   const persistUser = (userData: UserAccount | null) => {
     setUser(userData);
     try {
       if (userData) {
         localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(userData));
+        if (userData.profile?.preferredLanguage) {
+          setLanguage(userData.profile.preferredLanguage);
+        }
       } else {
         localStorage.removeItem(AUTH_STORAGE_KEY);
       }
