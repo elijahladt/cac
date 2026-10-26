@@ -3,19 +3,25 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Compass, MessageSquare, BookOpen, ClipboardList, MapPin } from 'lucide-react';
+import { Compass, MessageSquare, BookOpen, ClipboardList, MapPin, User } from 'lucide-react';
 import { useLanguage } from '@/components/providers/LanguageProvider';
+import { useAuth } from '@/components/providers/AuthProvider';
 
 export function BottomNav() {
   const pathname = usePathname();
   const { t } = useLanguage();
+  const { isAuthenticated, user } = useAuth();
 
   const links = [
     { href: '/', label: t.nav.home, icon: Compass },
     { href: '/chat', label: t.nav.navigator, icon: MessageSquare },
     { href: '/resources', label: t.nav.resources, icon: BookOpen },
     { href: '/case', label: t.nav.myCase, icon: ClipboardList },
-    { href: '/map', label: t.nav.map, icon: MapPin },
+    {
+      href: isAuthenticated ? '/profile' : '/login',
+      label: isAuthenticated ? (user?.profile.fullName.split(' ')[0] || 'Profile') : 'Sign In',
+      icon: User,
+    },
   ];
 
   return (

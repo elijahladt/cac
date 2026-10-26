@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/components/providers/LanguageProvider';
+import { useAuth } from '@/components/providers/AuthProvider';
 import {
   evaluateProgrammaticEligibility,
   HouseholdProfile,
@@ -30,17 +31,34 @@ import {
 
 export default function EligibilityChecker() {
   const { language, t } = useLanguage();
+  const { user, isAuthenticated } = useAuth();
   const lang = language;
 
-  const [householdSize, setHouseholdSize] = useState<number>(3);
-  const [monthlyIncome, setMonthlyIncome] = useState<number>(2100);
-  const [zipCode, setZipCode] = useState<string>('89030');
-  const [housingStatus, setHousingStatus] = useState<'stable' | 'couch_surfing' | 'at_risk' | 'unhoused'>('at_risk');
-  const [hasPastDueUtility, setHasPastDueUtility] = useState<boolean>(true);
-  const [hasDisconnectNotice, setHasDisconnectNotice] = useState<boolean>(false);
-  const [hasChildren, setHasChildren] = useState<boolean>(true);
-  const [hasSeniors, setHasSeniors] = useState<boolean>(false);
+  const [householdSize, setHouseholdSize] = useState<number>(user?.profile.householdSize || 3);
+  const [monthlyIncome, setMonthlyIncome] = useState<number>(user?.profile.monthlyIncome || 2100);
+  const [zipCode, setZipCode] = useState<string>(user?.profile.zipCode || '89030');
+  const [housingStatus, setHousingStatus] = useState<'stable' | 'couch_surfing' | 'at_risk' | 'unhoused'>(
+    user?.profile.housingStatus || 'at_risk'
+  );
+  const [hasPastDueUtility, setHasPastDueUtility] = useState<boolean>(user?.profile.hasPastDueUtility ?? true);
+  const [hasDisconnectNotice, setHasDisconnectNotice] = useState<boolean>(user?.profile.hasDisconnectNotice ?? false);
+  const [hasChildren, setHasChildren] = useState<boolean>(user?.profile.hasChildren ?? true);
+  const [hasSeniors, setHasSeniors] = useState<boolean>(user?.profile.hasSeniors ?? false);
   const [filterCategory, setFilterCategory] = useState<string>('all');
+
+  // When user profile is loaded or changed, update form
+  useEffect(() => {
+    if (user?.profile) {
+      setHouseholdSize(user.profile.householdSize);
+      setMonthlyIncome(user.profile.monthlyIncome);
+      setZipCode(user.profile.zipCode);
+      setHousingStatus(user.profile.housingStatus);
+      setHasPastDueUtility(user.profile.hasPastDueUtility);
+      setHasDisconnectNotice(user.profile.hasDisconnectNotice);
+      setHasChildren(user.profile.hasChildren);
+      setHasSeniors(user.profile.hasSeniors);
+    }
+  }, [user]);
 
   const [evaluations, setEvaluations] = useState<ProgramEligibilityEvaluation[]>([]);
 
@@ -107,6 +125,20 @@ export default function EligibilityChecker() {
               Clark County / NV-04
             </span>
           </div>
+
+          {isAuthenticated && user && (
+            <div className="p-3 rounded-xl bg-civic-50 border border-civic-200 text-xs flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-civic-700 flex-shrink-0" />
+                <span className="text-civic-900 font-medium">
+                  Personalized for <strong className="font-bold">{user.profile.fullName}</strong>
+                </span>
+              </div>
+              <Link href="/profile" className="text-[11px] font-bold text-civic-700 hover:underline">
+                Edit Profile
+              </Link>
+            </div>
+          )}
 
           {/* Household Size */}
           <div>

@@ -7,6 +7,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const message = body.message || '';
     const language = (body.preferredLanguage || body.language || 'en') as SupportedLanguage;
+    const userProfile = body.userProfile;
 
     if (!message || typeof message !== 'string') {
       return NextResponse.json(
@@ -15,7 +16,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const result = await runOrchestrator(message, language);
+    let enrichedMessage = message;
+    if (userProfile && typeof userProfile === 'object') {
+      const facts = [
+        userProfile.fullName ? `Name: ${userProfile.fullName}` : null,
+        userProfile.zipCode ? `Location: Zip ${userProfile.zipCode} (${userProfile.neighborhood || 'North Las Vegas / NV-04'})` : null,
+        userProfile.householdSize ? `Household size: ${userProfile.householdSize}` : null,
+        userProfile.monthlyIncome ? `Monthly income: $${userProfile.monthlyIncome}` : null,
+        userProfile.hasPastDueUtility ? 'Has past-due utility bill' : null,
+        userProfile.hasDisconnectNotice ? 'Has active disconnect shutoff notice' : null,
+        userProfile.isVeteran ? 'Veteran status: Yes' : null,
+      ].filter(Boolean).join(', ');
+
+      if (facts) {
+        enrichedMessage = `[User Household Profile: ${facts}] ${message}`;
+      }
+    }
+
+    const result = await runOrchestrator(enrichedMessage, language);
     return NextResponse.json({
       ...result,
       reply: result.responseMessage,

@@ -17,6 +17,8 @@ import {
   Volume2,
 } from 'lucide-react';
 import { useLanguage } from '@/components/providers/LanguageProvider';
+import { useAuth } from '@/components/providers/AuthProvider';
+import Link from 'next/link';
 import { ResourceCard } from '@/components/resources/ResourceCard';
 import { ResourceDetailModal } from '@/components/resources/ResourceDetailModal';
 import { Resource, ActionPlan, IntakeResult } from '@/lib/types';
@@ -39,6 +41,7 @@ export function ChatInterface() {
   const initialMode = searchParams.get('mode');
 
   const { language, t } = useLanguage();
+  const { user, isAuthenticated } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -61,17 +64,24 @@ export function ChatInterface() {
     scrollToBottom();
   }, [messages, currentProgressState]);
 
-  // Initial welcome message
+  // Initial welcome message (personalized if user is logged in)
   useEffect(() => {
     if (messages.length === 0) {
-      let welcomeText =
-        'Hello! I am Nevada Nexus, your community navigator for North Las Vegas and Congressional District 4. What kind of help are you or your family looking for today?';
+      const userName = user?.profile?.fullName?.split(' ')[0];
+      const userZip = user?.profile?.zipCode;
+
+      let welcomeText = userName
+        ? `Hello ${userName}! I am Nevada Nexus, your personalized community navigator for North Las Vegas (Zip ${userZip || '89030'}). What kind of help are you or your family looking for today?`
+        : 'Hello! I am Nevada Nexus, your community navigator for North Las Vegas and Congressional District 4. What kind of help are you or your family looking for today?';
+
       if (language === 'es') {
-        welcomeText =
-          '¡Hola! Soy Nevada Nexus, su navegador comunitario para North Las Vegas y el Distrito Congresional 4. ¿Qué tipo de asistencia necesita usted o su familia hoy?';
+        welcomeText = userName
+          ? `¡Hola ${userName}! Soy Nevada Nexus, su navegador comunitario personalizado para North Las Vegas (Código Postal ${userZip || '89030'}). ¿Qué tipo de asistencia necesita usted o su familia hoy?`
+          : '¡Hola! Soy Nevada Nexus, su navegador comunitario para North Las Vegas y el Distrito Congresional 4. ¿Qué tipo de asistencia necesita usted o su familia hoy?';
       } else if (language === 'tl') {
-        welcomeText =
-          'Kumusta! Ako si Nevada Nexus, ang iyong tagapamatnubay sa komunidad para sa North Las Vegas at Distrito 4. Anong tulong ang hinahanap mo o ng iyong pamilya ngayon?';
+        welcomeText = userName
+          ? `Kumusta ${userName}! Ako si Nevada Nexus, ang iyong tagapamatnubay para sa North Las Vegas (Zip ${userZip || '89030'}). Anong tulong ang kailangan mo o ng iyong pamilya ngayon?`
+          : 'Kumusta! Ako si Nevada Nexus, ang iyong tagapamatnubay sa komunidad para sa North Las Vegas at Distrito 4. Anong tulong ang hinahanap mo o ng iyong pamilya ngayon?';
       }
 
       setMessages([
@@ -84,7 +94,7 @@ export function ChatInterface() {
       ]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [language]);
+  }, [language, user]);
 
   // Handle URL query parameters if navigated with a prompt
   useEffect(() => {
@@ -119,7 +129,11 @@ export function ChatInterface() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: textToSend, language }),
+        body: JSON.stringify({
+          message: textToSend,
+          language,
+          userProfile: user?.profile,
+        }),
       });
 
       if (!res.ok) {
@@ -284,6 +298,14 @@ export function ChatInterface() {
               <span>Active Case Session</span>
               <span>•</span>
               <span className="font-semibold text-slate-700">North Las Vegas</span>
+              {isAuthenticated && user && (
+                <>
+                  <span>•</span>
+                  <Link href="/profile" className="text-civic-700 font-bold hover:underline">
+                    Personalized for {user.profile.fullName.split(' ')[0]}
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

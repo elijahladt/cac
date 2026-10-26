@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { LanguageProvider } from '@/components/providers/LanguageProvider';
+import { AuthProvider } from '@/components/providers/AuthProvider';
 import { EmergencyBanner } from '@/components/ui/EmergencyBanner';
 import { Navbar } from '@/components/ui/Navbar';
 import { BottomNav } from '@/components/ui/BottomNav';
@@ -31,12 +32,14 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-screen flex flex-col bg-slate-50 text-slate-900 pb-16 md:pb-0">
         <LanguageProvider>
-          <EmergencyBanner />
-          <Navbar />
-          <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            {children}
-          </main>
-          <BottomNav />
+          <AuthProvider>
+            <EmergencyBanner />
+            <Navbar />
+            <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+              {children}
+            </main>
+            <BottomNav />
+          </AuthProvider>
         </LanguageProvider>
       </body>
     </html>

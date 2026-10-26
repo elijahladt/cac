@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   Mic,
@@ -17,13 +18,18 @@ import {
   ShieldCheck,
   MapPin,
   FileCheck2,
+  User,
+  UserCheck,
+  CheckCircle2,
 } from 'lucide-react';
 import { useLanguage } from '@/components/providers/LanguageProvider';
+import { useAuth } from '@/components/providers/AuthProvider';
 import { ResourceCategory } from '@/lib/types';
 
 export default function HomePage() {
   const router = useRouter();
   const { language, t } = useLanguage();
+  const { user, isAuthenticated } = useAuth();
   const [query, setQuery] = useState('');
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -125,6 +131,90 @@ export default function HomePage() {
         <p className="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-2xl mx-auto">
           {t.heroSubtitle}
         </p>
+
+        {/* Personalized Welcome Card / Personalization CTA */}
+        {isAuthenticated && user ? (
+          <div className="bg-gradient-to-r from-civic-50 via-white to-blue-50 border-2 border-civic-200/80 rounded-2xl p-4 sm:p-5 text-left max-w-2xl mx-auto shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-civic-700 text-white flex items-center justify-center font-bold text-base shadow-sm flex-shrink-0">
+                  {user.profile.fullName.charAt(0)}
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-extrabold text-sm text-slate-900">
+                      Welcome, {user.profile.fullName}
+                    </span>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">
+                      Personalized
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Zip {user.profile.zipCode} • {user.profile.householdSize} Persons • ${user.profile.monthlyIncome.toLocaleString()}/mo
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/intake"
+                  className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-2xs inline-flex items-center gap-1"
+                >
+                  <span>1-Click Intake</span>
+                  <ArrowRight className="w-3 h-3" />
+                </Link>
+                <Link
+                  href="/profile"
+                  className="px-2.5 py-1.5 rounded-lg border border-slate-300 hover:bg-white text-slate-700 font-semibold text-xs transition"
+                >
+                  My Profile
+                </Link>
+              </div>
+            </div>
+
+            {user.profile.primaryNeeds?.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-civic-100 flex flex-wrap items-center gap-1.5 text-xs">
+                <span className="text-[11px] font-bold text-slate-600">Your Priority Needs:</span>
+                {user.profile.primaryNeeds.map((n) => (
+                  <span
+                    key={n}
+                    className="px-2 py-0.5 rounded bg-white border border-civic-200 text-civic-800 font-semibold text-[11px] capitalize"
+                  >
+                    {n.replace('_', ' ')}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="bg-amber-50/70 border border-amber-200 rounded-2xl p-3 sm:p-4 max-w-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-amber-100 text-amber-900 flex-shrink-0">
+                <Sparkles className="w-4 h-4 text-amber-700" />
+              </div>
+              <div>
+                <div className="text-xs font-bold text-slate-900">Want personalized assistance matches?</div>
+                <div className="text-[11px] text-slate-600">
+                  Answer 3 quick questions to calculate your exact poverty level &amp; auto-fill forms.
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0 w-full sm:w-auto">
+              <Link
+                href="/signup"
+                className="flex-1 sm:flex-none text-center px-3 py-1.5 rounded-xl bg-civic-700 hover:bg-civic-800 text-white text-xs font-bold shadow-2xs transition"
+              >
+                Sign Up &amp; Personalize
+              </Link>
+              <Link
+                href="/login"
+                className="flex-1 sm:flex-none text-center px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-white transition"
+              >
+                Sign In
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* Input Bar & Voice Button */}
         <div className="pt-2">

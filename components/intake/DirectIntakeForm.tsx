@@ -23,11 +23,13 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/components/providers/LanguageProvider';
+import { useAuth } from '@/components/providers/AuthProvider';
 import { VERIFIED_RESOURCES } from '@/lib/data/verifiedResources';
 import { ResourceCategory } from '@/lib/types';
 
 export default function DirectIntakeForm() {
   const { language, t } = useLanguage();
+  const { user, isAuthenticated } = useAuth();
   const lang = language;
 
   const [step, setStep] = useState<number>(1);
@@ -36,28 +38,54 @@ export default function DirectIntakeForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Applicant info
-  const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
+  const [fullName, setFullName] = useState(user?.profile.fullName || '');
+  const [phone, setPhone] = useState(user?.profile.phone || '');
+  const [email, setEmail] = useState(user?.profile.email || '');
   const [address, setAddress] = useState('2415 E Craig Rd #104');
   const [city, setCity] = useState('North Las Vegas');
-  const [zipCode, setZipCode] = useState('89030');
+  const [zipCode, setZipCode] = useState(user?.profile.zipCode || '89030');
 
   // Household & Income
-  const [householdSize, setHouseholdSize] = useState<number>(3);
-  const [monthlyIncome, setMonthlyIncome] = useState<number>(2150);
-  const [housingStatus, setHousingStatus] = useState<'stable' | 'couch_surfing' | 'at_risk' | 'unhoused'>('at_risk');
-  const [hasChildren, setHasChildren] = useState<boolean>(true);
-  const [hasSeniors, setHasSeniors] = useState<boolean>(false);
-  const [hasDisability, setHasDisability] = useState<boolean>(false);
+  const [householdSize, setHouseholdSize] = useState<number>(user?.profile.householdSize || 3);
+  const [monthlyIncome, setMonthlyIncome] = useState<number>(user?.profile.monthlyIncome || 2150);
+  const [housingStatus, setHousingStatus] = useState<'stable' | 'couch_surfing' | 'at_risk' | 'unhoused'>(
+    user?.profile.housingStatus || 'at_risk'
+  );
+  const [hasChildren, setHasChildren] = useState<boolean>(user?.profile.hasChildren ?? true);
+  const [hasSeniors, setHasSeniors] = useState<boolean>(user?.profile.hasSeniors ?? false);
+  const [hasDisability, setHasDisability] = useState<boolean>(user?.profile.hasDisability ?? false);
 
   // Service Details
-  const [primaryNeeds, setPrimaryNeeds] = useState<ResourceCategory[]>(['utility_assistance', 'food_assistance']);
-  const [utilityProvider, setUtilityProvider] = useState<'NV Energy' | 'Southwest Gas' | 'Other'>('NV Energy');
+  const [primaryNeeds, setPrimaryNeeds] = useState<ResourceCategory[]>(
+    user?.profile.primaryNeeds || ['utility_assistance', 'food_assistance']
+  );
+  const [utilityProvider, setUtilityProvider] = useState<'NV Energy' | 'Southwest Gas' | 'Other'>(
+    (user?.profile.utilityProvider as any) || 'NV Energy'
+  );
   const [utilityAccountNumber, setUtilityAccountNumber] = useState('9082-114-88');
-  const [pastDueAmount, setPastDueAmount] = useState('$218.50');
-  const [disconnectNoticeDate, setDisconnectNoticeDate] = useState('2026-10-04');
-  const [urgentStatement, setUrgentStatement] = useState('Received a 10-day power shutoff notice and need emergency grocery support for 2 kids.');
+  const [pastDueAmount, setPastDueAmount] = useState(user?.profile.hasPastDueUtility ? '$218.50' : '');
+  const [disconnectNoticeDate, setDisconnectNoticeDate] = useState(user?.profile.hasDisconnectNotice ? '2026-10-04' : '');
+  const [urgentStatement, setUrgentStatement] = useState(
+    user?.profile.notes || 'Received a 10-day power shutoff notice and need emergency grocery support for 2 kids.'
+  );
+
+  // Sync state if user logs in or profile changes
+  useEffect(() => {
+    if (user?.profile) {
+      setFullName(user.profile.fullName);
+      if (user.profile.phone) setPhone(user.profile.phone);
+      if (user.profile.email) setEmail(user.profile.email);
+      setZipCode(user.profile.zipCode);
+      setHouseholdSize(user.profile.householdSize);
+      setMonthlyIncome(user.profile.monthlyIncome);
+      setHousingStatus(user.profile.housingStatus);
+      setHasChildren(user.profile.hasChildren);
+      setHasSeniors(user.profile.hasSeniors);
+      setHasDisability(user.profile.hasDisability);
+      if (user.profile.primaryNeeds?.length) setPrimaryNeeds(user.profile.primaryNeeds);
+      if (user.profile.notes) setUrgentStatement(user.profile.notes);
+    }
+  }, [user]);
 
   // Target Providers to Dispatch to
   const [targetProviderIds, setTargetProviderIds] = useState<string[]>([
@@ -252,7 +280,15 @@ export default function DirectIntakeForm() {
 
         {/* Section 1: Applicant Information */}
         <div className="space-y-4">
-          <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">1. Applicant Contact Info</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">1. Applicant Contact Info</h3>
+            {isAuthenticated && user && (
+              <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                <span>Pre-filled from Profile</span>
+              </span>
+            )}
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">Full Legal Name *</label>
