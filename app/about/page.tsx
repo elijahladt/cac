@@ -33,6 +33,24 @@ export default function AboutPage() {
         </p>
       </div>
 
+      {/* Development & AI Use Disclosure Callout */}
+      <div className="p-6 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-blue-50 border-2 border-emerald-300/80 shadow-xs space-y-3">
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg bg-emerald-600 text-white flex-shrink-0">
+            <Code2 className="w-4 h-4" />
+          </div>
+          <h2 className="text-base font-bold text-slate-900">
+            Congressional App Challenge Disclosure: Human-Built Architecture &amp; Responsible AI Assistance
+          </h2>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+          <strong>The whole project was not made with AI.</strong> The vast majority of the frontend user interface, navigation flows, component layouts, and backend system architecture—including the deterministic statutory eligibility rules engine, data models, and direct intake pipelines—were <strong>human-designed and written by our team</strong>.
+        </p>
+        <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+          Agentic AI was utilized strictly as an interactive pair-programming and developer tool to <strong>solve specific technical bottlenecks, debug edge-case errors, and iteratively refine and improve features</strong> that we identified throughout the development process.
+        </p>
+      </div>
+
       {/* Core Principle Callout (PRD Section 2) */}
       <div className="p-5 rounded-2xl bg-civic-50 border border-civic-200 space-y-2">
         <h2 className="text-base font-bold text-civic-900 flex items-center gap-2">
