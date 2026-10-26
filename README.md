@@ -40,63 +40,7 @@ Deterministic Action Plan ("My Nevada Nexus Bridge Plan")
   ↓
 User Interface (Next.js Responsive Web App & PWA)
 ```
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+ (tested on Node v20/v24)
-- npm
-
-### 1. Installation
-```bash
-git clone https://github.com/example/nevada-nexus.git
-cd nevada-nexus
-npm install
-```
-
-### 2. Environment Variables
-Copy `.env.example` to `.env.local`:
-```bash
-cp .env.example .env.local
-```
-Configure your keys:
-- `OPENAI_API_KEY`: (Optional for local testing; full deterministic fallback engine runs out-of-the-box without an API key).
-- `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`: (Optional; seeded offline dataset is provided).
-- `GOOGLE_MAPS_API_KEY`: (Optional; fallback Haversine distance engine is provided).
-
-### 3. Run Development Server
-```bash
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
-## 🧪 Testing & Verification
-
-Run the automated test suite covering all agents, deterministic emergency pathways, scoring algorithms, and end-to-end user workflows:
-```bash
-npm test
-```
-
-Run TypeScript strict verification:
-```bash
-npm run typecheck
-```
-
-Run ESLint:
-```bash
-npm run lint
-```
-
-Build for production:
-```bash
-npm run build
-```
-
----
+----------------------------------------------
 
 ## 🏛️ Congressional App Challenge Compliance
 
