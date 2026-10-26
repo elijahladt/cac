@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Compass, MessageSquare, BookOpen, ClipboardList, MapPin, Shield, Info, User, LogIn, Sparkles } from 'lucide-react';
 import { useLanguage } from '@/components/providers/LanguageProvider';
@@ -28,8 +29,15 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-10 h-10 rounded-xl bg-civic-700 text-white flex items-center justify-center shadow-md shadow-civic-700/20 group-hover:bg-civic-800 transition">
-            <Compass className="w-6 h-6 stroke-[2.2]" />
+          <div className="relative w-10 h-10 rounded-xl bg-civic-50 border border-civic-200/80 flex items-center justify-center p-1.5 shadow-sm group-hover:scale-105 group-hover:shadow-md transition">
+            <Image
+              src="/logo-mark.png"
+              alt="Nevada Nexus Logo"
+              width={34}
+              height={34}
+              priority
+              className="object-contain"
+            />
           </div>
           <div>
             <div className="flex items-center gap-1.5">

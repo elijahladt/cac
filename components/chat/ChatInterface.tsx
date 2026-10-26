@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import {
   Send,
   Mic,
@@ -287,9 +288,15 @@ export function ChatInterface() {
     <div className="flex flex-col h-[calc(100vh-140px)] max-h-[850px] bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
       {/* Chat Header */}
       <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-civic-700 text-white flex items-center justify-center">
-            <Compass className="w-4 h-4" />
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-civic-50 border border-civic-200 p-1 flex items-center justify-center flex-shrink-0">
+            <Image
+              src="/logo-mark.png"
+              alt="Nevada Nexus"
+              width={24}
+              height={24}
+              className="object-contain"
+            />
           </div>
           <div>
             <h2 className="text-sm font-bold text-slate-900">Nevada Nexus Navigator</h2>

@@ -5,6 +5,7 @@ import { AuthProvider } from '@/components/providers/AuthProvider';
 import { EmergencyBanner } from '@/components/ui/EmergencyBanner';
 import { Navbar } from '@/components/ui/Navbar';
 import { BottomNav } from '@/components/ui/BottomNav';
+import { Footer } from '@/components/ui/Footer';
 
 export const metadata: Metadata = {
   title: 'Nevada Nexus | Multimodal AI Community Assistance Navigator',
@@ -38,6 +39,7 @@ export default function RootLayout({
             <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
               {children}
             </main>
+            <Footer />
             <BottomNav />
           </AuthProvider>
         </LanguageProvider>

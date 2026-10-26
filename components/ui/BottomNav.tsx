@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Compass, MessageSquare, BookOpen, ClipboardList, MapPin, User } from 'lucide-react';
 import { useLanguage } from '@/components/providers/LanguageProvider';
@@ -42,7 +43,19 @@ export function BottomNav() {
                 : 'text-slate-500 hover:text-slate-900'
             }`}
           >
-            <Icon className={`w-5 h-5 mb-0.5 ${isActive ? 'text-civic-700 stroke-[2.4]' : 'text-slate-400'}`} />
+            {link.href === '/' ? (
+              <div className="w-5 h-5 mb-0.5 relative flex items-center justify-center">
+                <Image
+                  src={isActive ? '/logo-mark-blue.png' : '/logo-mark.png'}
+                  alt="Home"
+                  width={20}
+                  height={20}
+                  className="object-contain"
+                />
+              </div>
+            ) : (
+              <Icon className={`w-5 h-5 mb-0.5 ${isActive ? 'text-civic-700 stroke-[2.4]' : 'text-slate-400'}`} />
+            )}
             <span className="truncate max-w-[64px]">{link.label}</span>
           </Link>
         );

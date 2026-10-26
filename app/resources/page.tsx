@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState, useTransition, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Search, Filter, ShieldCheck, RefreshCw, Compass } from 'lucide-react';
+import Image from 'next/image';
+import { Search, Filter, ShieldCheck, RefreshCw } from 'lucide-react';
 import { Resource, ResourceCategory } from '@/lib/types';
 import { searchResources, ScoredResource } from '@/tools/resources';
 import { ResourceCard } from '@/components/resources/ResourceCard';
@@ -179,7 +180,7 @@ export default function ResourcesPage() {
     <Suspense
       fallback={
         <div className="py-20 text-center text-slate-500 flex flex-col items-center justify-center gap-2">
-          <Compass className="w-8 h-8 animate-spin text-civic-700" />
+          <div className="w-10 h-10 relative animate-spin flex items-center justify-center"><Image src="/logo-mark.png" alt="Loading" width={32} height={32} className="object-contain" /></div>
           <span className="text-xs font-semibold">Loading community resource directory...</span>
         </div>
       }

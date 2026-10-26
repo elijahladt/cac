@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import {
   Users,
   DollarSign,
@@ -197,10 +198,16 @@ export function PersonalizationWizard({ mode = 'signup', onCompleted }: Personal
       {/* Step Indicator Header */}
       <div className="bg-gradient-to-r from-civic-900 via-civic-800 to-slate-900 text-white p-6 sm:p-8">
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <span className="w-7 h-7 rounded-lg bg-amber-400 text-slate-950 font-black text-xs flex items-center justify-center">
-              NV
-            </span>
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur-xs border border-white/20 p-1 flex items-center justify-center">
+              <Image
+                src="/logo-mark.png"
+                alt="Nevada Nexus"
+                width={24}
+                height={24}
+                className="object-contain"
+              />
+            </div>
             <span className="text-xs font-semibold uppercase tracking-wider text-civic-200">
               Personalized Assistance Setup
             </span>

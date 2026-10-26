@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
   Lock,
@@ -12,7 +13,6 @@ import {
   UserCheck,
   Zap,
   Users,
-  Compass,
 } from 'lucide-react';
 import { useAuth } from '@/components/providers/AuthProvider';
 import { useLanguage } from '@/components/providers/LanguageProvider';
@@ -56,8 +56,15 @@ export function LoginForm() {
     <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden max-w-lg mx-auto">
       {/* Header */}
       <div className="bg-gradient-to-r from-civic-900 via-civic-800 to-slate-900 text-white p-6 sm:p-8 text-center">
-        <div className="w-12 h-12 rounded-2xl bg-civic-700 text-white flex items-center justify-center mx-auto mb-3 shadow-md shadow-civic-950/40">
-          <Compass className="w-7 h-7" />
+        <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/20 p-2 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-civic-950/40">
+          <Image
+            src="/logo-mark.png"
+            alt="Nevada Nexus Logo"
+            width={48}
+            height={48}
+            priority
+            className="object-contain"
+          />
         </div>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
           {t.auth.signInTitle}

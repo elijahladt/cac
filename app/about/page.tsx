@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ShieldCheck,
   Compass,
@@ -54,7 +55,7 @@ export default function AboutPage() {
       {/* Core Principle Callout (PRD Section 2) */}
       <div className="p-5 rounded-2xl bg-civic-50 border border-civic-200 space-y-2">
         <h2 className="text-base font-bold text-civic-900 flex items-center gap-2">
-          <Compass className="w-5 h-5 text-civic-700" />
+          <div className="w-6 h-6 relative flex-shrink-0 flex items-center justify-center p-0.5 rounded-md bg-amber-50 border border-amber-200"><Image src="/logo-mark.png" alt="Nevada Nexus" width={20} height={20} className="object-contain" /></div>
           <span>Core Principle: AI as the Reasoning Layer, Not the Source of Truth</span>
         </h2>
         <p className="text-xs sm:text-sm text-civic-900/90 leading-relaxed">
